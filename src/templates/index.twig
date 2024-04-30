@@ -1,6 +1,45 @@
 {% extends "_layout.twig" %}
 
+{% set colors = [
+    "bg-pink-600",
+    "bg-purple-600",
+    "bg-yellow-500",
+    "bg-green-500",
+] %}
+
 {% block content %}
-    <h1>Hello, {{ name }}!</h1>
+    <main class="h-full flex flex-col items-center justify-center pb-[3.14159%]">
+        <div class="w-full max-w-80 px-3">
+            <h1 class="mb-7 text-2xl font-medium text-gray-900">Dennis Gilli´s Fileshare</h1>
+            <h2 class="text-sm font-medium text-gray-500">Downloads</h2>
+            <ul role="list" class="mx-auto mt-3 grid grid-cols-1 gap-5">
+                {% for item in data.downloads %}
+                    {% set color = [
+                        "bg-pink-600",
+                        "bg-purple-600",
+                        "bg-yellow-500",
+                        "bg-green-500",
+                    ][loop.index0 % colors|length] %}
+                    <li class="col-span-1 flex rounded-md shadow-sm">
+                        <div class="flex w-16 flex-shrink-0 items-center justify-center {{ color }} rounded-l-md text-sm font-medium text-white">{{ item.filetype | upper }}</div>
+                        <div class="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
+                            <div class="flex-1 truncate px-4 py-2 text-sm">
+                              <a href="#" class="font-medium text-gray-900 hover:text-gray-600">{{ item.filename ?? ("File " ~ loop.index) }}</a>
+                              <p class="text-gray-500">{{ item.filesize ?? "0 KB" }}</p>
+                            </div>
+                            <div class="flex-shrink-0 pr-2">
+                                <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-transparent bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <span class="sr-only">Download</span>
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </main>
 {% endblock %}
 
