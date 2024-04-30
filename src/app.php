@@ -3,17 +3,13 @@
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-$data = [
-    "downloads" => processFiles(
-        "test.pdf",
-        "test.md",
-    ),
-];
-
-function processFiles(...$files) {
+function processFiles(string ...$files): array {
     $processedFiles = [];
 
     foreach ($files as $file) {
+        if (!is_string($file)) {
+            throw new InvalidArgumentException("Each file must be a string representing a file path.");
+        }
         $filetype = pathinfo($file, PATHINFO_EXTENSION);
         $filename = pathinfo($file, PATHINFO_FILENAME) . "." . $filetype;
         $filesize = filesize($file); // in bytes
@@ -30,7 +26,7 @@ function processFiles(...$files) {
     return $processedFiles;
 }
 
-function formatFileSize($size) {
+function formatFileSize(int $size): string {
     if ($size >= 1024 * 1024 * 1024 * 1024) {
         return round($size / (1024 * 1024 * 1024 * 1024), 2) . ' TB';
     } elseif ($size >= 1024 * 1024 * 1024) {
@@ -44,7 +40,14 @@ function formatFileSize($size) {
     }
 }
 
-return function () use ($data) {
+$data = [
+    "downloads" => processFiles(
+        "test.pdf",
+        "test.md",
+    ),
+];
+
+return function () use ($data): void {
     $requestPath = $_GET['p'] ?? '/';
 
     echo $requestPath;
