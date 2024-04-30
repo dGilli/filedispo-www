@@ -45,6 +45,10 @@ function formatFileSize($size) {
 }
 
 return function () use ($data) {
+    $requestPath = $_GET['p'] ?? '/';
+
+    echo $requestPath;
+
     $loader = new FilesystemLoader(__DIR__ . '/templates');
     $twig = new Environment($loader);
 
