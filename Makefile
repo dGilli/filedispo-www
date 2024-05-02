@@ -7,7 +7,7 @@ build:
 	@docker build -t $(CONTAINER_NAME) .
 
 start:
-	@docker run -d --name $(CONTAINER_NAME) -p $(PORT):80 -v $(PWD):/var/app $(CONTAINER_NAME)
+	@docker run -de DEBUG=true --name $(CONTAINER_NAME) -p $(PORT):80 -v $(PWD):/var/app $(CONTAINER_NAME)
 
 stop:
 	@docker stop $(CONTAINER_NAME)

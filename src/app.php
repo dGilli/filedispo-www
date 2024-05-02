@@ -3,16 +3,14 @@
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-function processFiles(string ...$files): array {
+function processFiles(array $filenames): array {
     $processedFiles = [];
 
-    foreach ($files as $file) {
-        if (!is_string($file)) {
-            throw new InvalidArgumentException("Each file must be a string representing a file path.");
-        }
+    foreach ($filenames as $filename) {
+        $file = $filename;
+
         $filetype = pathinfo($file, PATHINFO_EXTENSION);
-        $filename = pathinfo($file, PATHINFO_FILENAME) . "." . $filetype;
-        $filesize = filesize($file); // in bytes
+        $filesize = filesize(__DIR__ . '/../shared/' .$file); // in bytes
 
         $filesize = formatFileSize($filesize);
 
@@ -40,20 +38,61 @@ function formatFileSize(int $size): string {
     }
 }
 
-$data = [
-    "downloads" => processFiles(
-        "test.pdf",
-        "test.md",
-    ),
-];
+return function (): void {
+    $debug = getenv('DEBUG') === 'true';
+    $correctPassword = "Hire Me!";
 
-return function () use ($data): void {
     $requestPath = $_GET['p'] ?? '/';
 
-    echo $requestPath;
-
     $loader = new FilesystemLoader(__DIR__ . '/templates');
-    $twig = new Environment($loader);
+    $twig = new Environment($loader, [
+        'debug' => $debug,
+        'cache' => '/var/cache/app/twig/compilation_cache',
+    ]);
 
-    echo $twig->render('index.twig', ['data' => $data]);
+    session_start();
+
+    if (empty($_SESSION['authenticated']) || !$_SESSION['authenticated']) {
+        $errors = [];
+
+        if ($requestPath === "verify" && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($_POST['password'] == $correctPassword) {
+                $_SESSION['authenticated'] = true;
+            } else {
+                $errors[] = 'Incorrect password. Please try again.';
+            }
+            header('Location: /');
+        }
+
+        $twig->display('login.twig', ['data' => [
+            "redirectPath" => $requestPath,
+            "errors" => $errors,
+        ],
+            'errors' => $errors,
+        ]);
+        exit;
+    }
+
+    $filenames = array_diff(scandir("/var/app/shared"), array('.', '..'));
+    $filename = preg_replace('/download\//', '', $requestPath);
+
+    if (array_search($filename, $filenames)) {
+        $file = '/var/app/shared/' . $filename;
+
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            flush(); // Flush system output buffer
+            readfile($file);
+        }
+    }
+
+    $twig->display('index.twig', ['data' => [
+        "downloads" => processFiles($filenames),
+    ]]);
 };
