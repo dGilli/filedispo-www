@@ -5,7 +5,10 @@
         {% block content %}
             {% from "login.twig" import form %}
 
-            {{ errors |join(' ') }}
+            {% if data.error %}
+                <div class="mb-1 text-red-500">{{ data.error }}</div>
+            {% endif %}
+
             {{ form('POST', '/verify', 'Verify') }}
         {% endblock %}
     {% endembed %}

@@ -53,23 +53,21 @@ return function (): void {
     session_start();
 
     if (empty($_SESSION['authenticated']) || !$_SESSION['authenticated']) {
-        $errors = [];
-
         if ($requestPath === "verify" && $_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_POST['password'] == $correctPassword) {
                 $_SESSION['authenticated'] = true;
             } else {
-                $errors[] = 'Incorrect password. Please try again.';
+                $_SESSION['error'] = 'Incorrect password. Please try again.';
             }
             header('Location: /');
+            exit;
         }
 
         $twig->display('login.twig', ['data' => [
-            "redirectPath" => $requestPath,
-            "errors" => $errors,
-        ],
-            'errors' => $errors,
-        ]);
+            "error" => $_SESSION['error'] ?? null,
+        ]]);
+
+        unset($_SESSION['error']);
         exit;
     }
 
