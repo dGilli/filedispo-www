@@ -1,7 +1,7 @@
-CONTAINER_NAME = `basename $(CURDIR)`
+CONTAINER_NAME = "filedispo-www"
 PORT = 8000
 
-.PHONY: build start stop ssh
+.PHONY: build start stop ssh log
 
 build:
 	@docker build -t $(CONTAINER_NAME) .
@@ -16,3 +16,5 @@ stop:
 ssh:
 	@docker exec -it $(CONTAINER_NAME) bash
 
+log:
+	@docker logs -f $(CONTAINER_NAME)
