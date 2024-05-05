@@ -10,7 +10,7 @@ function processFiles(array $filenames): array {
         $file = $filename;
 
         $filetype = pathinfo($file, PATHINFO_EXTENSION);
-        $filesize = filesize(__DIR__ . '/../shared/' .$file); // in bytes
+        $filesize = filesize('/var/www/'. getenv("PUBLIC_FILESHARE_DIR") . '/' . $file); // in bytes
 
         $filesize = formatFileSize($filesize);
 
@@ -71,11 +71,11 @@ return function (): void {
         exit;
     }
 
-    $filenames = array_diff(scandir("/var/app/shared"), array('.', '..'));
+    $filenames = array_diff(scandir('/var/www/' . getenv("PUBLIC_FILESHARE_DIR")), array('.', '..'));
     $filename = preg_replace('/download\//', '', $requestPath);
 
     if (array_search($filename, $filenames)) {
-        $file = '/var/app/shared/' . $filename;
+        $file = '/var/www/' . getenv("PUBLIC_FILESHARE_DIR") . '/' . $filename;
 
         if (file_exists($file)) {
             header('Content-Description: File Transfer');
