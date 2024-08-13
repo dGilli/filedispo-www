@@ -19,3 +19,6 @@ ssh:
 
 log:
 	@docker logs -f $(CONTAINER_NAME)
+
+deploy:
+	fly deploy
