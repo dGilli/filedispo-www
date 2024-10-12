@@ -1,17 +1,13 @@
 {% extends "_layouts/base.twig" %}
 
 {% block content %}
-    {% embed "_partials/container_narrow_centered.twig" %}
-        {% block content %}
-            {% from "login.twig" import form %}
+    {% from "login.twig" import form %}
 
-            {% if data.error %}
-                <div class="mb-1 text-red-500">{{ data.error }}</div>
-            {% endif %}
+    {% if data.error %}
+        <div class="mb-1 text-red-500">{{ data.error }}</div>
+    {% endif %}
 
-            {{ form('POST', '/verify', 'Verify') }}
-        {% endblock %}
-    {% endembed %}
+    {{ form('POST', '/verify', 'Verify') }}
 {% endblock %}
 
 {% macro form(method, action, buttonLabel = 'submit') %}

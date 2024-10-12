@@ -2,6 +2,7 @@
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\Extra\Html\HtmlExtension;
 
 function processFiles(array $filenames): array {
     $processedFiles = [];
@@ -49,6 +50,7 @@ return function (): void {
         'debug' => $debug,
         'cache' => '/var/cache/app/twig/compilation_cache',
     ]);
+    $twig->addExtension(new HtmlExtension());
 
     session_start();
 

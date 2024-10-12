@@ -9,19 +9,17 @@
 ] %}
 
 {% block content %}
-    {% embed "_partials/container_narrow_centered.twig" %}
-        {% block content %}
-            {% from "index.twig" import item %}
+    {% block content %}
+        {% from "index.twig" import item %}
 
-            <h1 class="mb-10 text-2xl font-bold leading-9 tracking-tight text-white">Dennis´ CV Fileshare</h1>
-            <h2 class="text-sm font-medium text-gray-500">Downloads</h2>
-            <ul role="list" class="mx-auto mt-3 grid grid-cols-1 gap-5">
-                {% for item in items %}
-                    {{ item(item, cycle(item_colors, loop.index0)) }}
-                {% endfor %}
-            </ul>
-        {% endblock %}
-    {% endembed %}
+        <h1 class="mb-10 text-2xl font-bold leading-9 tracking-tight text-white">Dennis´ CV Fileshare</h1>
+        <h2 class="text-sm font-medium text-gray-500">Downloads</h2>
+        <ul role="list" class="mx-auto mt-3 grid grid-cols-1 gap-5">
+            {% for item in items %}
+                {{ item(item, cycle(item_colors, loop.index0)) }}
+            {% endfor %}
+        </ul>
+    {% endblock %}
 {% endblock %}
 
 {% macro item(item = {}, color) %}

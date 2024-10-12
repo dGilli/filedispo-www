@@ -6,7 +6,13 @@
         <title>CV Fileshare</title>
         <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
     </head>
-    <body class="h-full">
-        {% block content %}{% endblock %}
+    <body class="h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+        <main class="w-full max-w-xs">
+            {% block content %}
+            {% endblock %}
+        </main>
+        <footer class="fixed bottom-0 left-0 px-0.5 py-2">
+            {% include "_partials/footer.twig" %}
+        </footer>
     </body>
 </html>

@@ -1,6 +1,7 @@
 {
     "require": {
-        "twig/twig": "^3.9"
+        "twig/twig": "^3.9",
+        "twig/html-extra": "^3.12"
     },
     "license": "MIT"
 }
