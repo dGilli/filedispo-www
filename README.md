@@ -1,4 +1,4 @@
-# filedipo-www
+# filedispo-www
 
 A lightweight PHP app for quick and easy file sharing.
 
